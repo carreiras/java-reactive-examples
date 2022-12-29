@@ -10,7 +10,7 @@ Exemplo de microserviço para estudo de API Reativa utilizando Spring WebFlux.
 # Clone este repositório
 $ git clone https://github.com/carreiras/reactive-examples.git
 
-# Abra ou import o projeto no IntelliJ IDEA (ou uma IDE de sua preferência)
+# Abra ou importe o projeto no IntelliJ IDEA (ou uma IDE de sua preferência)
 # Execute ReactiveExamplesApplication
 O servidor iniciará na porta:8080
 
