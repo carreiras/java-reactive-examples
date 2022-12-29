@@ -29,7 +29,7 @@ O servidor iniciará na porta:8080
 - Lombok
 
 
-## Author
+## Autor
 
 ### Ewerton Carreira
 
