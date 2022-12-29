@@ -19,7 +19,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public Flux<Person> getAll() {
+    public Flux<Person> findAll() {
         return Flux.just(michael, fiona, sam, jesse);
     }
 }
