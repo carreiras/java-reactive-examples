@@ -71,4 +71,38 @@ class PersonRepositoryImplTest {
             });
         });
     }
+
+    @Test
+    void testFindPersonbyId() {
+        final Integer id = 3;
+        Flux<Person> personFlux = personRepository.findAll();
+        Mono<Person> personMono = personFlux.filter(person -> person.getId() == id).next();
+        personMono.subscribe(person -> {
+            System.out.println(person.toString());
+        });
+    }
+
+    @Test
+    void testFindPersonbyIdNotFound() {
+        final Integer id = 8;
+        Flux<Person> personFlux = personRepository.findAll();
+        Mono<Person> personMono = personFlux.filter(person -> person.getId() == id).next();
+        personMono.subscribe(person -> {
+            System.out.println(person.toString());
+        });
+    }
+
+    @Test
+    void testFindPersonbyIdNotFoundWithException() {
+        final Integer id = 8;
+        Flux<Person> personFlux = personRepository.findAll();
+        Mono<Person> personMono = personFlux.filter(person -> person.getId() == id).single();
+        personMono.doOnError(throwable -> {
+                System.out.println("I went boom");
+            })
+            .onErrorReturn(Person.builder().id(id).build())
+            .subscribe(person -> {
+                System.out.println(person.toString());
+            });
+    }
 }
