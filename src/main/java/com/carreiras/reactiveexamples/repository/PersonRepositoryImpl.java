@@ -11,11 +11,11 @@ public class PersonRepositoryImpl implements PersonRepository {
     Person michael = new Person(1, "Michael", "Weston");
     Person fiona = new Person(2, "Fiona", "Glenanne");
     Person sam = new Person(3, "Sam", "Axe");
-    Person jesse = new Person(4, "Jesse", "Potter");
+    Person jesse = new Person(4, "Jesse", "Porter");
 
     @Override
     public Mono<Person> getById(Integer id) {
-        return Mono.just(michael);
+        return findAll().filter(person -> person.getId() == id).next();
     }
 
     @Override

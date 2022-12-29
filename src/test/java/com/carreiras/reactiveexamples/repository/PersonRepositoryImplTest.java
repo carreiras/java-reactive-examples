@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 
@@ -21,28 +22,57 @@ class PersonRepositoryImplTest {
     }
 
     @Test
-    void getByIdBlock() {
+    void testGetByIdBlock() {
         Mono<Person> personMono = personRepository.getById(1);
         Person person = personMono.block();
         System.out.println(person.toString());
     }
 
     @Test
-    void getByIdSubscribe() {
-        Mono<Person> personMono = personRepository.getById(1);
+    void testGetByIdSubscribe() {
+        Mono<Person> personMono = personRepository.getById(2);
+        StepVerifier.create(personMono).expectNextCount(1).verifyComplete();
+        personMono.subscribe(person -> {
+            System.out.println(person.toString());
+        });
+    }
+    @Test
+    void testGetByIdSubscribeNotFound() {
+        Mono<Person> personMono = personRepository.getById(9);
+        StepVerifier.create(personMono).expectNextCount(0).verifyComplete();
         personMono.subscribe(person -> {
             System.out.println(person.toString());
         });
     }
 
     @Test
-    void getByIdMapFunction() {
+    void testGetByIdMapFunction() {
         Mono<Person> personMono = personRepository.getById(1);
         personMono.map(person -> {
             System.out.println(person.toString());
             return person.getFirstName();
         }).subscribe(firstName -> {
             System.out.println("from map: " + firstName);
+        });
+    }
+
+    @Test
+    void testFindPersonById() {
+        Flux<Person> personFlux = personRepository.findAll();
+        final Integer id = 3;
+        Mono<Person> personMono = personFlux.filter(person -> person.getId() == id).next();
+        personMono.subscribe(person -> {
+            System.out.println(person.toString());
+        });
+    }
+
+    @Test
+    void testFindPersonByIdNotFound() {
+        Flux<Person> personFlux = personRepository.findAll();
+        final Integer id = 8;
+        Mono<Person> personMono = personFlux.filter(person -> person.getId() == id).next();
+        personMono.subscribe(person -> {
+            System.out.println(person.toString());
         });
     }
 
@@ -101,6 +131,19 @@ class PersonRepositoryImplTest {
                 System.out.println("I went boom");
             })
             .onErrorReturn(Person.builder().id(id).build())
+            .subscribe(person -> {
+                System.out.println(person.toString());
+            });
+    }
+
+    @Test
+    void testFindPersonByIdNotFoundWithException() {
+        Flux<Person> personFlux = personRepository.findAll();
+        final Integer id = 8;
+        Mono<Person> personMono = personFlux.filter(person -> person.getId() == id).single();
+        personMono.doOnError(throwable -> {
+                System.out.println("I went boom");
+            }).onErrorReturn(Person.builder().id(id).build())
             .subscribe(person -> {
                 System.out.println(person.toString());
             });
