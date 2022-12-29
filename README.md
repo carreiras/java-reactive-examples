@@ -2,7 +2,7 @@
 
 ## Sobre o projeto
 
-Exemplo de microserviço de estudo para API Reativa utilizando Spring WebFlux.
+Exemplo de microserviço para estudo de API Reativa utilizando Spring WebFlux.
 
 
 ## Author
